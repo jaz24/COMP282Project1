@@ -104,11 +104,7 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
             {
                 blResult = true;
 
-                if (current.left == null && current.right == null) //Node is a leaf
-                {
-                    current = null;
-                }
-                else if (current.getLeft() == null) //Node has one right child
+                if (current.getLeft() == null) //Node has or one right child
                 {
                     if(parent == null) //Parent hasn't been modified, we are at the root, right child becomes root
                     {
@@ -121,26 +117,29 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
                         else
                             parent.right = current.left;
                     }
-
-                    current = null;
                 }
-                else if (current.getRight() == null) //Node has one left child
+                else if(current.getRight() == null)
                 {
-                    parent = current.getLeft();
-
-                    current = null;
-                }
-                else //Node has two children, get inorder successor
-                {
-                    while (current.getLeft() != null)
+                    if(parent == null)
+                        root = current.getLeft();
+                    else
                     {
-                        parent = current;
-                        current = current.getLeft();
+                        if (e.compareTo(parent.getElement()) < 0)
+                            parent.left = current.right;
+                        else
+                            parent.right = current.left;
                     }
-
-                    if (parent != null)
-                        parent.setLeft(current.getRight());
                 }
+                else
+                {
+                    TreeNode<E> itemToDelete = inorderSuccessor(current.getRight());
+                    current.setElement(itemToDelete.getElement());
+
+                    if(current.getRight() == itemToDelete)
+                        current.setRight(itemToDelete.getRight());
+                }
+
+                current = null;
             }
             else //Element we are looking at is NOT element we want to delete
             {
@@ -153,8 +152,27 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
 
         }
 
-        size--; // In case algorithm is incorrect, break here if size < 0
+        if(blResult)// == true
+            size--;
         return blResult;
+    }
+
+    //Helper function to find inorder successor
+    //Implemented by Jake Lyon
+    private TreeNode<E> inorderSuccessor(TreeNode<E> current)
+    {
+        TreeNode<E> parent = null;
+
+        while(current.getLeft() != null)
+        {
+            parent = current;
+            current = current.getLeft();
+        }
+
+        if(parent != null)
+            parent.setLeft(current.getRight());
+
+        return current;
     }
 
     // returns the size of the tree
@@ -168,6 +186,7 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
          * HINT: THE NUMBER OF NODES CAN BE UPDATED IN THE "size" VARIABLE EVERY TIME A NODE IS INSERTED OR DELETED FROM THE TREE.
          */
 
+        //Because size is updated on every insert and delete, this method only needs to return size
         return size;
     }// end getSize
 
@@ -176,24 +195,28 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
     public ArrayList<E> postorderNoRecursion()
     {
 	    ArrayList<E> nonRecursivePostorder = new ArrayList<>();
-	    Stack<TreeNode<E>> nRPStack = new Stack<>();
+	    Stack<TreeNode<E>> stack1 = new Stack<>();
+	    Stack<TreeNode<E>> stack2 = new Stack<>();
 	    TreeNode<E> current;
 
 	    if (root == null)
 	        return nonRecursivePostorder;
 
-	    nRPStack.push(root);
+	    stack1.push(root);
 
-	    while(!nRPStack.isEmpty())
+	    while(!stack1.isEmpty())
         {
-            current = nRPStack.pop();
-            nonRecursivePostorder.add(current.getElement());
+            current = stack1.pop();
+            stack2.push(current);
 
             if(current.left != null)
-                nRPStack.push(current.getLeft());
+                stack1.push(current.getLeft());
             if(current.right != null)
-                nRPStack.push(current.getRight());
+                stack1.push(current.getRight());
         }
+
+        while(!stack2.isEmpty())
+            nonRecursivePostorder.add(stack2.pop().getElement());
 
 	    return nonRecursivePostorder;
     }
@@ -204,11 +227,11 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
    // implemented by Jake Lyon
     public int getNumberofNonLeaves()
     {
-	   TreeNode<E> current = root;
+	    TreeNode<E> current = root;
 
-	   nonleaves = countNonLeaf(current);
+	    nonleaves = countNonLeaf(current);
 
-	   return nonleaves;
+	    return nonleaves;
     }
 
     // recursive helper function to get total number of non-leaves
@@ -217,6 +240,7 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
     {
         if(node == null || node.left == null && node.right == null)
             return 0;
+
         return 1 + countNonLeaf(node.left) + countNonLeaf(node.right);
     }
    
