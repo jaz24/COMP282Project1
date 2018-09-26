@@ -19,16 +19,16 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
     public int size = 0;
     //Store the number of Non Leaf nodes in this class variables
     public int nonleaves;
-   
+
     public ArrayList<E> inOrderTraversal = new ArrayList<>();
     public ArrayList<E> preOrderTraversal = new ArrayList<>();
     public ArrayList<E> postOrderTraversal = new ArrayList<>();
     public ArrayList<E> bstTraversal= new ArrayList<>();
-  
+
 
     // empty constructor
     public BST(){ }
-   
+
     // check if it is empty
     public boolean isEmpty()
     {
@@ -73,7 +73,8 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
     // Implemented by Jazmin Perez
     public void insert(E e)
     {
-        TreeNode<E> newNode = new TreeNode<>(e);
+        TreeNode<E> newNode = new TreeNode<>();
+        newNode.setElement(e);
         root = insert(root, newNode);
         size++;
     }
@@ -86,20 +87,24 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
             TreeNode<E> parent = null;
             TreeNode<E> current = root; 
             while(current != null){
-                if(newNode.compareTo(current.element) < 0){
+                if(newNode.getElement().compareTo(current.element) < 0){
                     parent = insert(current.getLeft(), newNode);
                     current.setLeft(parent);
                     return current;
-                }else if(newNode.compareTo(current.element) > 0){
+                }else if(newNode.getElement().compareTo(current.element) > 0){
                     parent = insert(current.getRight(), newNode);
                     current.setRight(parent);
                     return current;
+                }else{
+                    return root; 
                 }
             }
-            if(newNode.compareTo(parent.element) < 0){
+            if(newNode.getElement().compareTo(parent.element) < 0){
                 parent.left = newNode;
+                return current; 
             }else{
                 parent.right = newNode; 
+                return current; 
             }
         }
     }
@@ -275,13 +280,11 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
 	        return nonRecursiveInorder;
         }
 
-        while(current != null  || !nRIStack.isEmpty()){
-            
+        while(!nRIStack.isEmpty()){
             while(current != null){
                 nRIStack.push(current);
                 current = current.left;
             }
-            
             current = nRIStack.pop();
             nonRecursiveInorder.add(current.getElement());
             current = current.right; 
