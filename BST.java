@@ -73,33 +73,32 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
     // Implemented by Jazmin Perez
     public void insert(E e)
     {
-        TreeNode<E> newNode = new TreeNode<>(e);
-        root = insert(root, newNode);
+        root = insert(root, e);
         size++;
     }
-    public TreeNode<E> insert(TreeNode<E> root, TreeNode<E> newNode){
+    public TreeNode<E> insert(TreeNode<E> root, TreeNode<E> e){
         if(root == null){
-            root = newNode;
+            root = new TreeNode<E>(e);
             return root;
         }
         else {
             TreeNode<E> parent = null;
             TreeNode<E> current = root; 
             while(current != null){
-                if(newNode.compareTo(current.element) < 0){
-                    parent = insert(current.getLeft(), newNode);
+                if(e.compareTo(current.element) < 0){
+                    parent = insert(current.getLeft(), e);
                     current.setLeft(parent);
                     return current;
-                }else if(newNode.compareTo(current.element) > 0){
-                    parent = insert(current.getRight(), newNode);
+                }else if(e.compareTo(current.element) > 0){
+                    parent = insert(current.getRight(), e);
                     current.setRight(parent);
                     return current;
                 }
             }
-            if(newNode.compareTo(parent.element) < 0){
-                parent.left = newNode;
+            if(e.compareTo(parent.element) < 0){
+                parent.left = e;
             }else{
-                parent.right = newNode; 
+                parent.right = e; 
             }
         }
     }
@@ -257,7 +256,6 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
                 nRIStack.push(current);
                 current = current.left;
             }
-            
             current = nRIStack.pop();
             nonRecursiveInorder.add(current.getElement());
             current = current.right; 
