@@ -50,18 +50,22 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
         boolean blResult = false;
 
         TreeNode<E> current = root;
+        
+        //while current containas a value: 
         while (current != null)
-        {
-            if (e.compareTo(current.element) < 0)
-            {
+        {   
+            //compare if the comparison between element e and current element is less than zero
+            if (e.compareTo(current.element) < 0){   
+                //if previous comparison is true, make the current Treenode equal to its left 
                 current = current.left;
             }
-            else if (e.compareTo(current.element) > 0)
-            {
+            //other wise: compare if the comparison between element e and current element is greater than zero
+            else if (e.compareTo(current.element) > 0){
+                //if comparison is greater than zero, make the current treenode equal to its right child
                 current = current.right;
             }
-            else
-            {
+            else{
+                //if all else fails, then the element e is in the BST
                 blResult = true;
                 return blResult;
             }
@@ -73,36 +77,53 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
     // Implemented by Jazmin Perez
     public void insert(E e)
     {
+        //make a new node that is being inserted into the tree
         TreeNode<E> newNode = new TreeNode<>();
+        //set its value to the e parameter, which is the element being inserted
         newNode.setElement(e);
         root = insert(root, newNode);
+        //increment the size of the BST
         size++;
     }
+    //helper function for insert method, using recursion 
     public TreeNode<E> insert(TreeNode<E> root, TreeNode<E> newNode){
+        //if the root is null, the root has no children
         if(root == null){
             root = newNode;
             return root;
         }
+        //otherwise, insertion must go through the following cases: 
         else {
             TreeNode<E> parent = null;
             TreeNode<E> current = root; 
+            //while current has no value
             while(current != null){
+                //if the comparison of the new element is less than zero: 
+                //insert new child to the left
                 if(newNode.getElement().compareTo(current.element) < 0){
                     parent = insert(current.getLeft(), newNode);
                     current.setLeft(parent);
                     return current;
-                }else if(newNode.getElement().compareTo(current.element) > 0){
+                }
+                //if the comparison of the new element is greater than zero: 
+                //insert new child to the right
+                else if(newNode.getElement().compareTo(current.element) > 0){
                     parent = insert(current.getRight(), newNode);
                     current.setRight(parent);
                     return current;
-                }else{
+                }
+                //if all else fails, return root
+                else{
                     return root; 
                 }
             }
+            //if comparison between the element and parent element is less than zero, make the parent.left the new Node
             if(newNode.getElement().compareTo(parent.element) < 0){
                 parent.left = newNode;
                 return current; 
-            }else{
+            }
+            //if not, if comparison between the element and parent element is less than zero, make the parent.left the new Node
+            else{
                 parent.right = newNode; 
                 return current; 
             }
@@ -272,23 +293,33 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
     // Implemented by Jazmin Perez
     public ArrayList<E>  inorderNoRecursion()
     {
+        //making new Arraylist and Stack 
 	    ArrayList<E> nonRecursiveInorder= new ArrayList<>();
 	    Stack<TreeNode<E>> nRIStack = new Stack<>();
         TreeNode<E> current = root;
 
+        //if the root is null, then there are no children, and that is the only element in the BST
 	    if (root == null){
+            //returns the Arraylist nonRecursiveInorder
 	        return nonRecursiveInorder;
         }
 
+        //if the Stack is not empty, do the following: 
         while(!nRIStack.isEmpty()){
+            //while current has a value, add the value to the stack
             while(current != null){
                 nRIStack.push(current);
+                //then move down to the left child
                 current = current.left;
             }
+            //if current is now null, set the deleted element to current 
             current = nRIStack.pop();
+            //add the deleted value to the Arraylist
             nonRecursiveInorder.add(current.getElement());
+            //move down to the right child 
             current = current.right; 
         }
+        //in the end, return the Arraylist with all values in inOrder 
 	    return nonRecursiveInorder;
     }
 
