@@ -70,18 +70,38 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
     } // end search method
 
 
-
+    // Implemented by Jazmin Perez
     public void insert(E e)
     {
-         
-        /**
-         * TODO: INSERT YOUR CODE HERE
-         *
-         * INSERT THE ITEM PASSED AS PARAMETER IN THE TREE .
-         * HINT: THE NUMBER OF NODE CAN BE UPDATED IN THE "size" VARIABLE
-         *
-         */
-
+        TreeNode<E> newNode = new TreeNode<>(e);
+        root = insert(root, newNode);
+        size++;
+    }
+    public TreeNode<E> insert(TreeNode<E> root, TreeNode<E> newNode){
+        if(root == null){
+            root = newNode;
+            return root;
+        }
+        else {
+            TreeNode<E> parent = null;
+            TreeNode<E> current = root; 
+            while(current != null){
+                if(newNode.compareTo(current.element) < 0){
+                    parent = insert(current.getLeft(), newNode);
+                    current.setLeft(parent);
+                    return current;
+                }else if(newNode.compareTo(current.element) > 0){
+                    parent = insert(current.getRight(), newNode);
+                    current.setRight(parent);
+                    return current;
+                }
+            }
+            if(newNode.compareTo(parent.element) < 0){
+                parent.left = newNode;
+            }else{
+                parent.right = newNode; 
+            }
+        }
     }
 
 
@@ -197,18 +217,16 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
 
 	    return nonRecursivePostorder;
     }
-   
-  
-  
-   // get the Number of non-leaves.
-   // implemented by Jake Lyon
+
+    // get the Number of non-leaves.
+    // implemented by Jake Lyon
     public int getNumberofNonLeaves()
     {
-	   TreeNode<E> current = root;
+	    TreeNode<E> current = root;
 
-	   nonleaves = countNonLeaf(current);
+	    nonleaves = countNonLeaf(current);
 
-	   return nonleaves;
+	    return nonleaves;
     }
 
     // recursive helper function to get total number of non-leaves
@@ -219,21 +237,35 @@ public class  BST<E extends Comparable<E>> implements TreeInterface<E>
             return 0;
         return 1 + countNonLeaf(node.left) + countNonLeaf(node.right);
     }
-   
+
+
     //(Implement inorder traversal without using recursion)
+    // Implemented by Jazmin Perez
     public ArrayList<E>  inorderNoRecursion()
     {
 	    ArrayList<E> nonRecursiveInorder= new ArrayList<>();
+	    Stack<TreeNode<E>> nRIStack = new Stack<>();
+        TreeNode<E> current = root;
 
-	    /**
-	       * TODO: INSERT YOUR CODE HERE
-	       * FIND THE IN ORDER TRAVERSAL OF THE TREE WITHOUT USING RECURSION AND RETURN THE RESULT TRAVEL SEQUENCE IN ARRAYLIST nonRecursiveInorder
-	       */
+	    if (root == null){
+	        return nonRecursiveInorder;
+        }
 
+        while(current != null  || !nRIStack.isEmpty()){
+            
+            while(current != null){
+                nRIStack.push(current);
+                current = current.left;
+            }
+            
+            current = nRIStack.pop();
+            nonRecursiveInorder.add(current.getElement());
+            current = current.right; 
+        }
 	    return nonRecursiveInorder;
     }
-   
-  
+
+
     // traversal with recursion
     public ArrayList<E> inorder()
     {
