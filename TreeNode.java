@@ -33,7 +33,7 @@ class TreeNode<E>
 }
 
 
-	public void setLeft(TreeNode left) {
+	public void setLeft(TreeNode<E> left) {
 	this.left = left;
 }
 
@@ -43,7 +43,7 @@ class TreeNode<E>
 }
 
 
-	public void setRight(TreeNode right) {
+	public void setRight(TreeNode<E> right) {
 	this.right = right;
 }
    
